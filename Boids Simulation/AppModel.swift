@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import RealityKit
 
 /// Maintains app-wide state
 @MainActor
@@ -18,4 +19,9 @@ class AppModel {
         case open
     }
     var immersiveSpaceState = ImmersiveSpaceState.closed
+    
+    init() {
+        InstanceAnimationSystem.registerSystem()
+        RepellerComponent.registerComponent()
+    }
 }
