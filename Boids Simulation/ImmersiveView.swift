@@ -21,7 +21,7 @@ struct ImmersiveView: View {
         RealityView { content in
             let markerRadius: Float = 0.03
             var redMaterial = UnlitMaterial(color: .red)
-            redMaterial.blending = .transparent(opacity: .init(floatLiteral: 0))
+            redMaterial.blending = .transparent(opacity: .init(floatLiteral: 0.5))
             
             let leftMarker = ModelEntity(mesh: .generateSphere(radius: markerRadius), materials: [redMaterial])
             leftMarker.name = "LeftHandMarker"
@@ -38,12 +38,12 @@ struct ImmersiveView: View {
             
             let mesh = MeshResource.generateBox(size: [0.2, 0.2, 0.6])
             
-//            var boidMaterial = PhysicallyBasedMaterial()
-//            boidMaterial.baseColor = PhysicallyBasedMaterial.BaseColor(tint: .init(white: 1.0, alpha: 1))
-//            boidMaterial.metallic.scale = 1
-//            boidMaterial.roughness.scale = 0.25
+            var boidMaterial = PhysicallyBasedMaterial()
+            boidMaterial.baseColor = PhysicallyBasedMaterial.BaseColor(tint: .init(white: 1.0, alpha: 1))
+            boidMaterial.metallic.scale = 1
+            boidMaterial.roughness.scale = 0.25
             
-            let boidMaterial = UnlitMaterial(color: .blue)
+            //let boidMaterial = UnlitMaterial(color: .blue)
             
             let count = 300
             
@@ -80,6 +80,16 @@ struct ImmersiveView: View {
             model.position = [0, 1.2, -1]
             model.components.set(meshInstancesComponent)
             content.add(model)
+        }
+        .task {
+            if let unavailableCapabilities = await session.run(configuration) {
+                if unavailableCapabilities.anchor.contains(.hand) {
+                    print("Access to hand data failed")
+                } else {
+                    print("Hand tracking is available")
+                }
+
+            }
         }
     }
 }
